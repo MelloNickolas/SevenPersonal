@@ -1,0 +1,24 @@
+name: Keep API awake
+
+# Evita o cold start do Render (plano free) pingando /api/health periodicamente.
+# Configure a URL em: Settings → Secrets and variables → Actions → Variables → API_HEALTH_URL
+# Ex.: https://seven-personal-api.onrender.com/api/health
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # a cada 10 minutos
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health endpoint
+        run: |
+          URL="${{ vars.API_HEALTH_URL }}"
+          if [ -z "$URL" ]; then
+            echo "Defina a variável API_HEALTH_URL nas configurações do repositório."
+            exit 0
+          fi
+          echo "Pingando $URL"
+          curl -fsS --max-time 60 "$URL" || echo "Ping falhou (a API pode estar acordando)."

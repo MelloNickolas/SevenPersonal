@@ -1,0 +1,6 @@
+@SevenPersonal.API_HostAddress = http://localhost:5110
+
+GET {{SevenPersonal.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
